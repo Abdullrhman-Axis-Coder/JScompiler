@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Compiler</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #569cd6;
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            width: 560px;
+            height: 250px;
+            background-color: #2d2d2d;
+            color: #9cdcfe;
+            border: 1px solid #3c3c3c;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        #output {
+            color: #4ec9b0;
+            background-color: #151515;
+        }
+
+        button {
+            margin: 15px 0;
+            width: 560px;
+            padding: 12px;
+            background-color: #0e639c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #1177bb;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>JavaScript Compiler</h2>
+
+    <textarea id="code" placeholder="// Type your JavaScript code here...&#10;console.log('Hello World!');"></textarea>
+    
+    <button id="run">Run Code</button>
+    
+    <textarea id="output" readonly placeholder="Output will appear here..."></textarea>
+
+    <script>
+        const codeInput = document.getElementById("code");
+        const btn = document.getElementById("run");
+        const outDisplay = document.getElementById("output");
+
+        btn.addEventListener('click', function () {
+            outDisplay.value = ""; 
+
+            let logs = [];
+
+            const oldLog = console.log;
+            console.log = function (...args) {
+                logs.push(args.join(' '));
+                oldLog.apply(console, args);
+            };
+
+            try {
+                let result = eval(codeInput.value);
+
+                if (logs.length > 0) {
+                    outDisplay.value = logs.join('\n');
+                } 
+        
+                else if (result !== undefined) {
+                    outDisplay.value = result;
+                } else {
+                    outDisplay.value = "Code executed successfully (No output returned).";
+                }
+            } catch (error) {
+                outDisplay.value = "❌ Error: " + error.message;
+            }
+
+            console.log = oldLog;
+        });
+    </script>
+</body>
+</html>
